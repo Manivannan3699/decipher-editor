@@ -1,6 +1,4 @@
-// ✅ Check if React is loaded
-console.log("Checking React:", typeof React);
-
+// ✅ Check if React is loaded BEFORE running any code
 if (typeof React === "undefined") {
   console.error("🚨 React is NOT loaded! Check index.html script order.");
 } else {
