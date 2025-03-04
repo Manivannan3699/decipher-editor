@@ -5,7 +5,8 @@ function DecipherSurveyEditor() {
   const [errors, setErrors] = useState([]);
 
   useEffect(() => {
-    // Load CodeMirror
+    console.log("React Loaded!"); // Debugging message
+
     const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
       mode: "xml",
       theme: "material-darker",
@@ -18,7 +19,6 @@ function DecipherSurveyEditor() {
 
   }, []);
 
-  // Function to validate Decipher script
   const validateCode = () => {
     let newErrors = [];
     if (!code.includes("<survey>")) newErrors.push("Missing <survey> root element");
@@ -27,7 +27,6 @@ function DecipherSurveyEditor() {
     setErrors(newErrors);
   };
 
-  // Function to export the script as a file
   const exportFile = () => {
     const blob = new Blob([code], { type: "text/xml" });
     saveAs(blob, "decipher_survey.xml");
@@ -51,8 +50,12 @@ function DecipherSurveyEditor() {
   );
 }
 
-// Render the Component
-ReactDOM.render(
-  React.createElement(DecipherSurveyEditor),
-  document.getElementById("root")
-);
+// Render the Component after ensuring React is loaded
+if (typeof React !== "undefined") {
+  ReactDOM.render(
+    React.createElement(DecipherSurveyEditor),
+    document.getElementById("root")
+  );
+} else {
+  console.error("React is not loaded. Check script order.");
+}
