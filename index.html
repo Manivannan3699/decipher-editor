@@ -20,14 +20,20 @@
 <body>
     <div id="root"></div>
 
-    <!-- ✅ Load `editor.js` AFTER confirming React is ready -->
+    <!-- ✅ Ensure React is Fully Loaded Before Loading `editor.js` -->
     <script>
-      setTimeout(() => {
-        console.log("✅ Loading editor.js after delay...");
-        let script = document.createElement("script");
-        script.src = "editor.js";
-        document.body.appendChild(script);
-      }, 3000); // Delay to ensure React is loaded
+      function loadEditorScript() {
+        if (typeof React !== "undefined" && typeof ReactDOM !== "undefined") {
+          console.log("✅ React is fully loaded! Now loading editor.js...");
+          let script = document.createElement("script");
+          script.src = "editor.js";
+          document.body.appendChild(script);
+        } else {
+          console.log("⏳ Waiting for React to load...");
+          setTimeout(loadEditorScript, 500); // Retry every 500ms until React is ready
+        }
+      }
+      loadEditorScript(); // Start checking for React
     </script>
 </body>
 </html>
