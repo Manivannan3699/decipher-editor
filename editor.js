@@ -1,14 +1,22 @@
-import { useState } from "react";
-import { Controlled as CodeMirror } from "react-codemirror2";
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/material-darker.css";
-import "codemirror/mode/xml/xml";
-import { Button } from "@/components/ui/button";
-import { saveAs } from "file-saver";
+const { useState, useEffect } = React;
 
-export default function DecipherSurveyEditor() {
+function DecipherSurveyEditor() {
   const [code, setCode] = useState("<survey>\n  <!-- Start writing your Decipher survey script here -->\n</survey>");
   const [errors, setErrors] = useState([]);
+
+  useEffect(() => {
+    // Load CodeMirror after React renders
+    const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      mode: "xml",
+      theme: "material-darker",
+      lineNumbers: true
+    });
+
+    editor.on("change", (cm) => {
+      setCode(cm.getValue());
+    });
+
+  }, []);
 
   // Function to validate Decipher script
   const validateCode = () => {
@@ -26,27 +34,24 @@ export default function DecipherSurveyEditor() {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-2">Decipher Survey Editor</h1>
-      <CodeMirror
-        value={code}
-        options={{ mode: "xml", theme: "material-darker", lineNumbers: true }}
-        onBeforeChange={(editor, data, value) => setCode(value)}
-      />
-      <div className="mt-4 flex gap-2">
-        <Button onClick={validateCode}>Validate</Button>
-        <Button onClick={exportFile}>Export</Button>
-      </div>
-      {errors.length > 0 && (
-        <div className="mt-4 bg-red-100 p-2 rounded text-red-700">
-          <h2 className="font-semibold">Validation Errors:</h2>
-          <ul>
-            {errors.map((err, index) => (
-              <li key={index}>- {err}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+    React.createElement("div", { className: "p-4" },
+      React.createElement("h1", { className: "text-xl font-bold mb-2" }, "Decipher Survey Editor"),
+      React.createElement("textarea", { id: "editor", defaultValue: code, style: { width: "100%", height: "200px" } }),
+      React.createElement("div", { className: "mt-4 flex gap-2" },
+        React.createElement("button", { onClick: validateCode }, "Validate"),
+        React.createElement("button", { onClick: exportFile }, "Export")
+      ),
+      errors.length > 0 && React.createElement("div", { className: "mt-4 bg-red-100 p-2 rounded text-red-700" },
+        React.createElement("h2", { className: "font-semibold" }, "Validation Errors:"),
+        React.createElement("ul", {},
+          errors.map((err, index) => React.createElement("li", { key: index }, "- " + err))
+        )
+      )
+    )
   );
 }
+
+ReactDOM.render(
+  React.createElement(DecipherSurveyEditor),
+  document.getElementById("root")
+);
