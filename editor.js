@@ -5,7 +5,7 @@ function DecipherSurveyEditor() {
   const [errors, setErrors] = useState([]);
 
   useEffect(() => {
-    // Load CodeMirror after React renders
+    // Load CodeMirror
     const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
       mode: "xml",
       theme: "material-darker",
@@ -51,6 +51,7 @@ function DecipherSurveyEditor() {
   );
 }
 
+// Render the Component
 ReactDOM.render(
   React.createElement(DecipherSurveyEditor),
   document.getElementById("root")
